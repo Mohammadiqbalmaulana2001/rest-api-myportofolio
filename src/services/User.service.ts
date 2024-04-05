@@ -15,3 +15,15 @@ export const registrasiUserService = async (
 
   return data;
 };
+
+export const loginUserService = async (
+  payload: userType
+): Promise<userType | null> => {
+  const data = await prisma.user.findUnique({
+    where: {
+      email: payload.email,
+    },
+  });
+
+  return data;
+};

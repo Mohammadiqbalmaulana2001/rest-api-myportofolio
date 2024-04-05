@@ -1,11 +1,16 @@
 import { NextFunction, Request, Response } from "express";
 import {
+  loginUserService,
   registrasiUserService,
   semuaUserService,
 } from "../services/User.service";
 import { logger } from "../utils/logger";
-import { registrasiUserValidation } from "../validations/User.validation";
-import { enkripsi } from "../utils/bcrypt";
+import {
+  loginUserValidation,
+  registrasiUserValidation,
+} from "../validations/User.validation";
+import { compare, enkripsi } from "../utils/bcrypt";
+import { generateAccessToken } from "../utils/jwt";
 
 export const semuaUserController = async (
   req: Request,
@@ -65,6 +70,61 @@ export const registrasiUserController = async (
     next(
       logger.error(
         'Error pada controller "registrasiUserController" : ' +
+          String((error as Error).message)
+      )
+    );
+  }
+};
+
+export const loginUserController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { error, value } = loginUserValidation(req.body);
+    if (error != null) {
+      logger.error("user gagal login");
+      res.status(400).json({
+        error: error.details[0].message,
+        nessage: "user gagal login",
+        data: value,
+      });
+    }
+    const user = await loginUserService({ ...value });
+    if (user == null) {
+      logger.error("user tidak ditemukan");
+      return res.status(400).json({
+        error: null,
+        nessage: "email tidak ditemukan",
+        data: value,
+      });
+    }
+    if (!compare(value.password, user.password)) {
+      logger.error("password tidak sesuai");
+      return res.status(400).json({
+        error: "Password tidak sesuai",
+        message: "Login gagal",
+        data: null,
+      });
+    }
+
+    const accessToken = generateAccessToken(user);
+    const refreshToken = generateAccessToken(user);
+    logger.info("POST /login-user");
+    res.status(200).json({
+      error: null,
+      message: "Login Berhasil",
+      data: {
+        user,
+        accessToken,
+        refreshToken,
+      },
+    });
+  } catch (error) {
+    next(
+      logger.error(
+        'Error pada controller "loginUserController" : ' +
           String((error as Error).message)
       )
     );

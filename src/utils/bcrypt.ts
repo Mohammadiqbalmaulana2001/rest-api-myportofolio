@@ -1,7 +1,11 @@
 import bcrypt from "bcrypt";
 
-export const enkripsi = (password: string): Promise<string> => {
+export const enkripsi = (password: string): string => {
   const salt = bcrypt.genSaltSync(10);
   const hash = bcrypt.hashSync(password, salt);
-  return Promise.resolve(hash);
+  return hash;
+};
+
+export const compare = (password: string, hash: string): boolean => {
+  return bcrypt.compareSync(password, hash);
 };
