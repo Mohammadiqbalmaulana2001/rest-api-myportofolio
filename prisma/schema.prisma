@@ -12,3 +12,12 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+model User {
+  user_id  String @id @unique @default(uuid())
+  email String @unique
+  nama String @default("")
+  password String
+  role String @default("regular")
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}

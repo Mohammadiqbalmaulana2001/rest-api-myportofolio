@@ -13,8 +13,8 @@ export const logger = pino(
         colorize: true,
       },
     },
-    
+
     timestamp: () => `,"time":"${moment().format("YYYY-MM-DD HH:mm:ss")}"`,
   },
   PinoPretty()
-)
+);
