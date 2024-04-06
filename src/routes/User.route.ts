@@ -4,9 +4,10 @@ import {
   registrasiUserController,
   semuaUserController,
 } from "../controllers/User.contoller";
+import { verikasiUserAdmin } from "../utils/verikasi";
 
 export const UserRouter: Router = Router();
 
-UserRouter.get("/users", semuaUserController);
+UserRouter.get("/users", verikasiUserAdmin, semuaUserController);
 UserRouter.post("/registrasi", registrasiUserController);
 UserRouter.post("/login", loginUserController);

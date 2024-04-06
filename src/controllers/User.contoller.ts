@@ -111,6 +111,7 @@ export const loginUserController = async (
 
     const accessToken = generateAccessToken(user);
     const refreshToken = generateAccessToken(user);
+
     logger.info("POST /login-user");
     res.status(200).json({
       error: null,
