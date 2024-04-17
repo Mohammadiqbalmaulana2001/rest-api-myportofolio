@@ -13,11 +13,24 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 model User {
-  user_id  String @id @unique @default(uuid())
-  email String @unique
-  nama String @default("")
-  password String
-  role String @default("regular")
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  id Int @id @unique @default(autoincrement())
+  user_id    String      @unique @default(uuid())
+  email      String     @unique
+  nama       String     @default("")
+  password   String
+  role       String     @default("regular")
+  profile    Profile?
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
+}
+
+model Profile {
+  id          String     @id @unique @default(uuid())
+  user        User       @relation(fields: [userId], references: [id])
+  userId      Int @unique
+  fullName    String
+  bio         String?
+  avatar      String @default("https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/2048px-User-avatar.svg.png")
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @updatedAt
 }
