@@ -1,3 +1,4 @@
+import { verikasiUserAdmin } from "./../utils/verikasi";
 import { Router } from "express";
 import {
   addProfileController,
@@ -9,8 +10,8 @@ import {
 
 export const ProfileRouter: Router = Router();
 
-ProfileRouter.get("/", semuaProfileController);
-ProfileRouter.get("/:id", getProfileByIdController);
+ProfileRouter.get("/", verikasiUserAdmin, semuaProfileController);
+ProfileRouter.get("/:id", verikasiUserAdmin, getProfileByIdController);
 ProfileRouter.post("/", addProfileController);
 ProfileRouter.put("/:id", updateProfileController);
 ProfileRouter.delete("/:id", deleteProfileController);

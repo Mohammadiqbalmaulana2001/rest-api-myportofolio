@@ -1,10 +1,27 @@
 import prisma from "../utils/prismaClient";
 import profileType from "../types/profile.type";
-import { logger } from "../utils/logger";
 
 export const semuaProfileService = async () => {
   const data = await prisma.profile.findMany({
-    include: { user: true },
+    select: {
+      id: true,
+      fullName: true,
+      bio: true,
+      avatar: true,
+      userId: true,
+      user: {
+        select: {
+          id: true,
+          user_id: true,
+          email: true,
+          nama: true,
+          created_at: true,
+          updated_at: true,
+        },
+      },
+      created_at: true,
+      updated_at: true,
+    },
   });
   return data;
 };
@@ -14,7 +31,25 @@ export const getIdProfileService = async (payload: Partial<profileType>) => {
     where: {
       id: payload.id,
     },
-    include: { user: true },
+    select: {
+      id: true,
+      fullName: true,
+      bio: true,
+      avatar: true,
+      userId: true,
+      user: {
+        select: {
+          id: true,
+          user_id: true,
+          email: true,
+          nama: true,
+          created_at: true,
+          updated_at: true,
+        },
+      },
+      created_at: true,
+      updated_at: true,
+    },
   });
   return id;
 };

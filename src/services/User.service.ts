@@ -2,11 +2,7 @@ import prisma from "../utils/prismaClient";
 import userType from "../types/User.type";
 
 export const semuaUserService = async () => {
-  const data = await prisma.user.findMany({
-    // include: {
-    //   profile: true,
-    // },
-  });
+  const data = await prisma.user.findMany({});
   return data;
 };
 

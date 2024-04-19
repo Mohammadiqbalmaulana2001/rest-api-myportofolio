@@ -20,9 +20,10 @@ export const verikasiUserAdmin = async (
   }
   const user = await verikasiAccessToken(token);
   if (user === null || typeof user === "string" || !("email" in user)) {
+    logger.error("token tidak benar");
     return res.status(401).json({
       error: "Unauthorized",
-      message: "Token tidak valid",
+      message: "Token tidak benar",
       data: null,
     });
   }

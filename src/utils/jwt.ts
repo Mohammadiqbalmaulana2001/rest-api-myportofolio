@@ -11,11 +11,14 @@ const generateAccessToken = (payload: userType): string => {
 
 const verikasiAccessToken = (token: string): string | null | JwtPayload => {
   try {
-    logger.info("verifikasi access token");
     const decodedToken = jsonwebtoken.verify(token, String(config.JWT_SECRET));
-    return decodedToken;
+    return decodedToken as JwtPayload;
   } catch (error) {
-    logger.error("verifikasi access token gagal");
+    if (error instanceof jsonwebtoken.TokenExpiredError) {
+      logger.error("Token Ini Sudah Kadaluarsa");
+    } else {
+      logger.error("error verikasi access token");
+    }
     return null;
   }
 };
@@ -28,10 +31,13 @@ const generateRefreshToken = (payload: userType): string => {
 
 const verikasiRefreshToken = (token: string): string | null | JwtPayload => {
   try {
-    logger.info("verikasi refresh token");
     return jsonwebtoken.verify(token, String(config.JWT_REFRESH_SCREET));
   } catch (error) {
-    logger.error("verikasi refresh token gagal");
+    if (error instanceof jsonwebtoken.TokenExpiredError) {
+      logger.error("Token Ini Sudah Kadaluarsa");
+    } else {
+      logger.error("error verikasi access token");
+    }
     return null;
   }
 };
