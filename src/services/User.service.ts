@@ -2,7 +2,9 @@ import prisma from "../utils/prismaClient";
 import userType from "../types/User.type";
 
 export const semuaUserService = async () => {
-  const data = await prisma.user.findMany({});
+  const data = await prisma.user.findMany({
+    orderBy: [{ id: "desc" }, { created_at: "desc" }],
+  });
   return data;
 };
 

@@ -4,10 +4,8 @@ import {
   addProfileService,
   deleteProfileService,
   getIdProfileService,
-  IdProfileDeleteService,
   semuaProfileService,
   updateProfileService,
-  userIdProfileService,
 } from "../services/Profile.service";
 import { profileValidation } from "../validations/profile.validation";
 
@@ -83,24 +81,15 @@ export const addProfileController = async (
     const { error, value } = profileValidation(req.body);
     if (error != null) {
       logger.error("profile gagal ditambahkan");
-      res.status(400).json({
-        error: error.details[0].message,
-        message: "profile gagal ditambahkan",
-        data: value,
-      });
-    }
-    const userId = await userIdProfileService(value.userId);
-    if (!userId) {
-      logger.error("profile gagal ditambahkan");
       return res.status(400).json({
-        error: "Profil dengan userId ini sudah ada.",
+        error: error.details[0].message,
         message: "profile gagal ditambahkan",
         data: value,
       });
     }
     const data = await addProfileService(value);
     logger.info("POST /add-profile");
-    res.status(201).json({
+    return res.status(201).json({
       error: false,
       message: "profile berhasil ditambahkan",
       data,
@@ -125,38 +114,16 @@ export const updateProfileController = async (
     const { error, value } = profileValidation(req.body);
     if (error != null) {
       logger.error("profile gagal diupdate");
-      res.status(400).json({
+      return res.status(400).json({
         error: error.details[0].message,
         message: "profile gagal diupdate",
         data: value,
       });
     }
-    const userId = await userIdProfileService(value.userId);
-    if (!userId) {
-      logger.error("profile gagal ditambahkan");
-      return res.status(400).json({
-        error: "Profil dengan userId ini sudah ada.",
-        message: "profile gagal ditambahkan",
-        data: value,
-      });
-    } else if (id !== value.id) {
-      logger.error("profile gagal diupdate");
-      return res.status(400).json({
-        error: "id profile tidak sesuai",
-        message: "profile gagal diupdate",
-        data: value,
-      });
-    } else if (userId === null || userId === undefined) {
-      logger.error("profile gagal diupdate");
-      return res.status(400).json({
-        error: "userId tidak ditemukan",
-        message: "profile gagal diupdate",
-        data: value,
-      });
-    }
+
     const data = await updateProfileService({ ...value, id });
     logger.info("POST /update-profile");
-    res.status(201).json({
+    return res.status(201).json({
       error: false,
       message: "profile berhasil diupdate",
       data,
@@ -178,37 +145,21 @@ export const deleteProfileController = async (
 ) => {
   try {
     const { id } = req.params;
-    const idProfile = await IdProfileDeleteService({ id });
-    if (!idProfile) {
+    if (!id) {
       logger.error("profile gagal di hapus");
       return res.status(400).json({
-        error: "id profile tidak ditemukan",
+        error: "profile gagal di hapus",
         message: "profile gagal di hapus",
         data: null,
       });
     }
     const data = await deleteProfileService({ id });
-    if (data) {
-      logger.info("POST /delete-profile");
-      res.status(201).json({
-        error: false,
-        message: "profile berhasil di hapus",
-        data,
-      });
-    } else if (data === null || data === undefined) {
-      logger.error("profile gagal di hapus");
-      return res.status(400).json({
-        error: "profile gagal di hapus",
-        message: "profile gagal di hapus",
-        data,
-      });
-    } else {
-      return res.status(500).json({
-        error: null,
-        message: "Barang gagal dihapus",
-        data,
-      });
-    }
+    logger.info("POST /delete-profile");
+    return res.status(201).json({
+      error: false,
+      message: "profile berhasil di hapus",
+      data,
+    });
   } catch (error) {
     next(
       logger.error(

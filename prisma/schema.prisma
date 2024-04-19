@@ -20,6 +20,11 @@ model User {
   password   String
   role       String     @default("regular")
   profile    Profile?
+  project    Project[]
+  skills     Skill[]
+  workExperiences WorkExperience[]
+  pendidikan Pendidikan[]
+  sertifikat Sertifikat[]
   created_at DateTime   @default(now())
   updated_at DateTime   @updatedAt
 }
@@ -31,6 +36,65 @@ model Profile {
   fullName    String
   bio         String?
   avatar      String @default("https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/2048px-User-avatar.svg.png")
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @updatedAt
+}
+
+model Project {
+  id String @id @unique @default(cuid())
+  title String 
+  deskripsi String
+  url String?
+  imageUrl String?
+  user        User     @relation(fields: [userId], references: [id])
+  userId      Int
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @updatedAt
+}
+
+model Skill {
+  id String @id @unique @default(cuid())
+  nama String
+  level String?
+  url String?
+  imageUrl String?
+  deskripsi String
+  user User[] @relation()
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @updatedAt
+}
+
+model WorkExperience {
+  id String @id @unique @default(cuid())
+  perusahaan     String
+  position    String
+  deskripsi String?
+  user        User     @relation(fields: [userId], references: [id])
+  userId      Int
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @updatedAt
+}
+
+model Pendidikan {
+  id String @id @unique @default(cuid())
+  perguruan String
+  tingkat      String
+  bidang       String
+  user        User     @relation(fields: [userId], references: [id])
+  userId      Int
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @updatedAt
+}
+
+model Sertifikat {
+  id String @id @unique @default(cuid())
+  title       String
+  penerbit      String
+  deskrispsi String?
+  url String?
+  imageUrl String?
+  user        User     @relation(fields: [userId], references: [id])
+  userId      Int
   created_at  DateTime   @default(now())
   updated_at  DateTime   @updatedAt
 }

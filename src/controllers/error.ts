@@ -9,7 +9,7 @@ export const errorHsandler = async (
 ) => {
   const message = err.message.split("-")[1];
   logger.error(err);
-  res.status(400).json({
+  return res.status(400).json({
     error: message,
     message: "terjadi kesalahan pada server",
     data: null,
@@ -22,7 +22,7 @@ export const notFoundHandler = async (
   next: NextFunction
 ) => {
   logger.error("not found");
-  res.status(404).json({
+  return res.status(404).json({
     error: "Not Found",
     message: "tidak ditemukan",
     data: null,

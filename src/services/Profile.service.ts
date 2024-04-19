@@ -3,6 +3,7 @@ import profileType from "../types/profile.type";
 
 export const semuaProfileService = async () => {
   const data = await prisma.profile.findMany({
+    orderBy: [{ id: "desc" }, { created_at: "desc" }],
     select: {
       id: true,
       fullName: true,
@@ -62,22 +63,28 @@ export const addProfileService = async (payload: profileType) => {
       bio: payload.bio,
       avatar: payload.avatar,
     },
-    include: {
-      user: { include: { profile: true } },
+    select: {
+      id: true,
+      fullName: true,
+      bio: true,
+      avatar: true,
+      userId: true,
+      user: {
+        select: {
+          id: true,
+          user_id: true,
+          email: true,
+          nama: true,
+          created_at: true,
+          updated_at: true,
+        },
+      },
+      created_at: true,
+      updated_at: true,
     },
   });
 
   return data;
-};
-
-export const userIdProfileService = async (payload: number) => {
-  const data = await prisma.profile.findUnique({
-    where: {
-      userId: payload,
-    },
-  });
-
-  return !data;
 };
 
 export const updateProfileService = async (payload: profileType) => {
@@ -91,8 +98,24 @@ export const updateProfileService = async (payload: profileType) => {
       bio: payload.bio,
       avatar: payload.avatar,
     },
-    include: {
-      user: { include: { profile: true } },
+    select: {
+      id: true,
+      fullName: true,
+      bio: true,
+      avatar: true,
+      userId: true,
+      user: {
+        select: {
+          id: true,
+          user_id: true,
+          email: true,
+          nama: true,
+          created_at: true,
+          updated_at: true,
+        },
+      },
+      created_at: true,
+      updated_at: true,
     },
   });
   return data;
@@ -114,14 +137,4 @@ export const deleteProfileService = async (payload: Partial<profileType>) => {
     },
   });
   return data;
-};
-
-export const IdProfileDeleteService = async (payload: Partial<profileType>) => {
-  const id = await prisma.profile.findUnique({
-    where: {
-      id: payload.id,
-    },
-  });
-
-  return id;
 };

@@ -10,7 +10,7 @@ import {
   registrasiUserValidation,
 } from "../validations/User.validation";
 import { compare, enkripsi } from "../utils/bcrypt";
-import { generateAccessToken } from "../utils/jwt";
+import { generateAccessToken, generateRefreshToken } from "../utils/jwt";
 
 export const semuaUserController = async (
   req: Request,
@@ -110,7 +110,7 @@ export const loginUserController = async (
     }
 
     const accessToken = generateAccessToken(user);
-    const refreshToken = generateAccessToken(user);
+    const refreshToken = generateRefreshToken(user);
 
     logger.info("POST /login-user");
     res.status(200).json({
