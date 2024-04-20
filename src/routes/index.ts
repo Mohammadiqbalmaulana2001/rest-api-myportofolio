@@ -6,6 +6,7 @@ import { ProfileRouter } from "./profile.route";
 import { ProjectRouter } from "./Project.route";
 import { SkillRoute } from "./skill.route";
 import { WorkExperienceRoute } from "./WorkExperience.route";
+import { PendidikanRoute } from "./Pendidikan.route";
 
 const __routes: Array<[string, Router]> = [
   ["/", HomeRouter],
@@ -14,6 +15,7 @@ const __routes: Array<[string, Router]> = [
   ["/project", ProjectRouter],
   ["/skill", SkillRoute],
   ["/experience", WorkExperienceRoute],
+  ["/pendidikan", PendidikanRoute],
 ];
 
 export const Routes = (app: Application) => {
