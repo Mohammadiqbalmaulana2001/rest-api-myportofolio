@@ -7,7 +7,6 @@ import {
   updateProjectService,
   addProjectService,
   deleteProjectService,
-  userIdProjectService,
 } from "../services/Project.service";
 
 export const semuaProjectController = async (
@@ -89,22 +88,6 @@ export const addProjectController = async (
         data: value,
       });
     }
-    const userId = await userIdProjectService(value);
-    if (userId) {
-      logger.error("project gagal ditambahkan");
-      return res.status(400).json({
-        error: "project untuk userId ini sudah ada",
-        message: "project gagal ditambahkan",
-        data: value,
-      });
-    } else if (!userId) {
-      logger.error("project gagal ditambahkan");
-      return res.status(400).json({
-        error: "project untuk userId ini tidak ada",
-        message: "project gagal ditambahkan",
-        data: value,
-      });
-    }
 
     const data = await addProjectService(value);
     logger.info("POST /add-project");
@@ -135,23 +118,6 @@ export const updateProjectController = async (
       logger.error("project gagal diupdate");
       return res.status(400).json({
         error: error.details[0].message,
-        message: "project gagal diupdate",
-        data: value,
-      });
-    }
-
-    const userId = await userIdProjectService(value);
-    if (userId) {
-      logger.error("project gagal diupdate");
-      return res.status(400).json({
-        error: "project untuk userId ini sudah ada",
-        message: "project gagal diupdate",
-        data: value,
-      });
-    } else if (!userId && id !== userId) {
-      logger.error("project gagal diupdate");
-      return res.status(400).json({
-        error: "project untuk userId ini tidak ada",
         message: "project gagal diupdate",
         data: value,
       });

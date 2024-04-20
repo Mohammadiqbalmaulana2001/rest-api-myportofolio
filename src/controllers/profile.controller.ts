@@ -6,7 +6,6 @@ import {
   getIdProfileService,
   semuaProfileService,
   updateProfileService,
-  userIdProfileService,
 } from "../services/Profile.service";
 import { profileValidation } from "../validations/profile.validation";
 
@@ -19,14 +18,14 @@ export const semuaProfileController = async (
     const data = await semuaProfileService();
     if (data === null || data.length === 0) {
       logger.info("GET /semua-profile");
-      res.status(200).json({
+      return res.status(200).json({
         error: false,
         message: "data profile tidak ditemukan",
         data: [],
       });
     }
     logger.info("GET /semua-profile");
-    res.status(200).json({
+    return res.status(200).json({
       error: false,
       message: "data profile",
       data,
@@ -58,7 +57,7 @@ export const getProfileByIdController = async (
       });
     }
     logger.info("GET /get-profile By Id");
-    res.status(200).json({
+    return res.status(200).json({
       error: false,
       message: "data profile dengan id " + id,
       data,
@@ -84,22 +83,6 @@ export const addProfileController = async (
       logger.error("profile gagal ditambahkan");
       return res.status(400).json({
         error: error.details[0].message,
-        message: "profile gagal ditambahkan",
-        data: value,
-      });
-    }
-    const userId = await userIdProfileService(value);
-    if (userId) {
-      logger.error("profile gagal ditambahkan");
-      return res.status(400).json({
-        error: "Profile untuk userId ini sudah ada",
-        message: "profile gagal ditambahkan",
-        data: value,
-      });
-    } else if (!userId) {
-      logger.error("profile gagal ditambahkan");
-      return res.status(400).json({
-        error: "Profile untuk userId ini tidak ada",
         message: "profile gagal ditambahkan",
         data: value,
       });
@@ -133,22 +116,6 @@ export const updateProfileController = async (
       logger.error("profile gagal diupdate");
       return res.status(400).json({
         error: error.details[0].message,
-        message: "profile gagal diupdate",
-        data: value,
-      });
-    }
-    const userId = await userIdProfileService(value);
-    if (userId) {
-      logger.error("profile gagal diupdate");
-      return res.status(400).json({
-        error: "profile untuk userId ini sudah ada",
-        message: "profile gagal diupdate",
-        data: value,
-      });
-    } else if (!userId && id !== userId) {
-      logger.error("profile gagal diupdate");
-      return res.status(400).json({
-        error: "profile untuk userId ini tidak ada",
         message: "profile gagal diupdate",
         data: value,
       });

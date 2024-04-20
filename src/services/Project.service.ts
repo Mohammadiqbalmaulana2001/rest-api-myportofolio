@@ -94,15 +94,6 @@ export const addProjectService = async (payload: projectType) => {
   }
 };
 
-export const userIdProjectService = async (payload: Partial<projectType>) => {
-  const id = await prisma.profile.findUnique({
-    where: {
-      userId: payload.userId,
-    },
-  });
-  return id;
-};
-
 export const updateProjectService = async (payload: projectType) => {
   const data = await prisma.project.update({
     where: {
