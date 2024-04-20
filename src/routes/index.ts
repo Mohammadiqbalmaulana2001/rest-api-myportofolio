@@ -5,6 +5,7 @@ import { errorHsandler, notFoundHandler } from "../controllers/error";
 import { ProfileRouter } from "./profile.route";
 import { ProjectRouter } from "./Project.route";
 import { SkillRoute } from "./skill.route";
+import { WorkExperienceRoute } from "./WorkExperience.route";
 
 const __routes: Array<[string, Router]> = [
   ["/", HomeRouter],
@@ -12,6 +13,7 @@ const __routes: Array<[string, Router]> = [
   ["/profile", ProfileRouter],
   ["/project", ProjectRouter],
   ["/skill", SkillRoute],
+  ["/experience", WorkExperienceRoute],
 ];
 
 export const Routes = (app: Application) => {
