@@ -6,6 +6,7 @@ import {
   getIdProfileService,
   semuaProfileService,
   updateProfileService,
+  userIdProfileService,
 } from "../services/Profile.service";
 import { profileValidation } from "../validations/profile.validation";
 
@@ -87,6 +88,22 @@ export const addProfileController = async (
         data: value,
       });
     }
+    const userId = await userIdProfileService(value);
+    if (userId) {
+      logger.error("profile gagal ditambahkan");
+      return res.status(400).json({
+        error: "Profile untuk userId ini sudah ada",
+        message: "profile gagal ditambahkan",
+        data: value,
+      });
+    } else if (!userId) {
+      logger.error("profile gagal ditambahkan");
+      return res.status(400).json({
+        error: "Profile untuk userId ini tidak ada",
+        message: "profile gagal ditambahkan",
+        data: value,
+      });
+    }
     const data = await addProfileService(value);
     logger.info("POST /add-profile");
     return res.status(201).json({
@@ -120,7 +137,22 @@ export const updateProfileController = async (
         data: value,
       });
     }
-
+    const userId = await userIdProfileService(value);
+    if (userId) {
+      logger.error("profile gagal diupdate");
+      return res.status(400).json({
+        error: "profile untuk userId ini sudah ada",
+        message: "profile gagal diupdate",
+        data: value,
+      });
+    } else if (!userId && id !== userId) {
+      logger.error("profile gagal diupdate");
+      return res.status(400).json({
+        error: "profile untuk userId ini tidak ada",
+        message: "profile gagal diupdate",
+        data: value,
+      });
+    }
     const data = await updateProfileService({ ...value, id });
     logger.info("POST /update-profile");
     return res.status(201).json({

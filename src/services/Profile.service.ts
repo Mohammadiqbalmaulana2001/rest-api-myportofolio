@@ -86,7 +86,14 @@ export const addProfileService = async (payload: profileType) => {
 
   return data;
 };
-
+export const userIdProfileService = async (payload: Partial<profileType>) => {
+  const id = await prisma.profile.findUnique({
+    where: {
+      userId: payload.userId,
+    },
+  });
+  return id;
+};
 export const updateProfileService = async (payload: profileType) => {
   const data = await prisma.profile.update({
     where: {
