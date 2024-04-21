@@ -113,15 +113,21 @@ export const loginUserController = async (
     const refreshToken = generateRefreshToken(user);
 
     logger.info("POST /login-user");
-    res.status(200).json({
-      error: null,
-      message: "Login Berhasil",
-      data: {
+    res
+      .status(200)
+      .cookie("accessToken", accessToken, {
+        httpOnly: true,
+      })
+      .cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+      })
+      .json({
+        error: false,
+        message: "user berhasil login",
         user,
         accessToken,
         refreshToken,
-      },
-    });
+      });
   } catch (error) {
     next(
       logger.error(

@@ -4,6 +4,14 @@ import userType from "../types/User.type";
 export const semuaUserService = async () => {
   const data = await prisma.user.findMany({
     orderBy: [{ id: "desc" }, { created_at: "desc" }],
+    include: {
+      profile: true,
+      project: true,
+      skills: true,
+      workExperiences: true,
+      pendidikan: true,
+      sertifikat: true,
+    },
   });
   return data;
 };
